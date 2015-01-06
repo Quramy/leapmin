@@ -7,8 +7,15 @@ angular.module('leapmin', ['ui.router', 'ui.bootstrap'])
         url: '/',
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl'
+      })
+      .state('play', {
+        url: '/play/guide',
+        templateUrl: 'app/play/play.html',
+        controller: 'PlayCtrl as play'
+      })
+      .state('play.setteings', {
       });
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/play/guide');
   })
 ;

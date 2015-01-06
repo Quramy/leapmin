@@ -10,14 +10,13 @@
     <!-- build:css({.tmp,src}) styles/vendor.css -->
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
     <!-- bower:css -->
-    <!-- run `gulp wiredep` to automaticaly populate bower styles dependencies -->
     <!-- endbower -->
     <!-- endbuild -->
     
 
     <!-- build:css({.tmp,src}) styles/app.css -->
     <!-- inject:css -->
-    <!-- css files will be automaticaly insert here -->
+    <link rel="stylesheet" href="app/index.css">
     <!-- endinject -->
     <!-- endbuild -->
 
@@ -33,6 +32,7 @@
     <div ui-view></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <!--
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
       function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -41,16 +41,31 @@
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
+    -->
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
-    <!-- run `gulp wiredep` to automaticaly populate bower script dependencies -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="../bower_components/leapjs/leap-0.6.2.js"></script>
+    <script src="../bower_components/threejs/build/three.js"></script>
     <!-- endbower -->
+    <script src="../bower_components/leapjs-plugins/main/leap-plugins-0.1.6.js"></script>
     <!-- endbuild -->
 
     <!-- build:js({.tmp,src}) scripts/app.js -->
     <!-- inject:js -->
-    <!-- js files will be automaticaly insert here -->
+    <script src="app/index.js"></script>
+    <script src="components/navbar/navbar.controller.js"></script>
+    <script src="components/leap/leapTheremin.service.js"></script>
+    <script src="components/leap/leap.service.js"></script>
+    <script src="components/audio/thereminNode.service.js"></script>
+    <script src="components/audio/audioContext.service.js"></script>
+    <script src="components/audio/audioConnection.service.js"></script>
+    <script src="app/play/play.controller.js"></script>
+    <script src="app/main/main.controller.js"></script>
     <!-- endinject -->
 
     <!-- inject:partials -->

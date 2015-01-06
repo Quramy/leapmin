@@ -2,7 +2,9 @@
 
 angular.module('leapmin').factory('leapManager', function ($window) {
   var leapController = new $window.Leap.Controller();
-  leapController.use('handEntry');
+  leapController
+  .use('handHold')
+  .use('handEntry');
 
 
   leapController.on('handFound', function (hand){

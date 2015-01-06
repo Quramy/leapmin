@@ -51,7 +51,6 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
   var p = new picth();
   var vo = new voice({picth:p});
 
-  //var count = 0;
   var audiohandler = function (event) {
     var outL = event.outputBuffer.getChannelData(0);
     var outR = event.outputBuffer.getChannelData(1);
@@ -60,41 +59,7 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
       outL[i]  = out;
       outR[i]  = outL[i];
     }
-    //  count = count + outL.length;
   };
-
-  /*
-  $(function(){
-    var connect_state = true;
-    $('#toggle').on('click', function(){
-      if(connect_state){
-        scriptproc.disconnect();
-        $(this).text('play');
-        connect_state = false;
-      }else{
-        scriptproc.connect(filter);
-        $(this).text('pause');
-        connect_state = true;
-      }
-    });
-
-    $('#freq').on('input', function(){
-      var freq = parseFloat($(this).val());
-      p.val(freq);
-    });
-
-    $('.key-notes>button').on('click', function(){
-      var f = $(this).attr('data-freq')
-      p.val(f);
-    });
-
-    p.addEventListener('change', function(val){
-      $('#freq').val(val);
-    });
-
-    p.val(440.0);
-  });
-  */
 
   scriptproc.addEventListener('audioprocess', audiohandler)
   //scriptproc.connect(filter);
@@ -105,16 +70,16 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
   gainNode.connect(audio.destination);
   gainNode.gain.value = gain;
 
-  console.log(audio.sampleRate);
-
-
   p.val(440.0);
-  console.log('aaaa', audio);
   return {
-    setPitch: function (freq){
-      return p.val(freq);
+    pitch : function (freq){
+      if(freq){
+        return p.val(freq);
+      }else{
+        return p._freq;
+      }
     },
-    setGain: function(gain){
+    gain: function(gain){
       //gainNode.gain.value = gain;
     },
     start: function () {

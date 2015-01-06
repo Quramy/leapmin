@@ -1,14 +1,12 @@
 'use strict';
 
-
-angular.module('leapmin').directive('guide', function ($window, leapManager){
+angular.module('leapmin').factory('leapThree', function($window, leapManager){
 
   var THREE = $window.THREE;
   var baseBoneRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
-  var renderer, scene, camera;
+  var scene;
 
-  var leapController = leapManager.leapController;
-  leapController.on('handFound', function(hand){
+  leapManager.on('handFound', function(hand){
     hand.fingers.forEach(function (finger) {
 
       var boneMeshes = [];
@@ -88,40 +86,19 @@ angular.module('leapmin').directive('guide', function ($window, leapManager){
         if (bone) {
           mesh.position.fromArray(bone.prevJoint);
         }else{
-          bone = finger.bones[i-1];
+          bone = finger.bones[i - 1];
           mesh.position.fromArray(bone.nextJoint);
         }
       });
     });
   };
 
-  /**
-   *
-   * Initialize THREE.js's scene.
-   *
-   **/
-  var initScene = function(renderArea){
-
-    var width = renderArea.parent().innerWidth();
-    var height = window.innerHeight - renderArea.offset().top - 20;
-
-    renderer = new THREE.WebGLRenderer();
-    renderer.setSize(width, height);
-    renderArea[0].appendChild(renderer.domElement);
-
-    camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-    camera.position.y = 160;
-    camera.position.z = 800;
-
-    new THREE.OrbitControls(camera, renderer.domElement);
-
+  var initScene = function(){
     scene = new THREE.Scene();
-
     scene.add(new THREE.AxisHelper(400));
     scene.add(new THREE.GridHelper(400, 10));
-
+    addLeapCube(scene);
     return scene;
-
   };
 
   /**
@@ -142,25 +119,11 @@ angular.module('leapmin').directive('guide', function ($window, leapManager){
     scene.add(mesh);
   };
 
-  var animate = function(){
-    window.requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    leapController.frame(0).hands.forEach(updateHand);
-  };
+  initScene();
 
   return {
-    restrict: 'AC',
-    scope: true,
-    template: '<div></div>',
-    link: function ($scope, $elem, $attrs){
-      initScene($elem);
-      addLeapCube(scene);
-      renderer.render(scene, camera);
-      animate();
-      $scope.$destroy(function (){
-      });
-    }
+    init: initScene,
+    scene:scene
   };
 
 });
-

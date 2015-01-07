@@ -9,7 +9,7 @@ angular.module('leapmin').directive('lpmGuide', function ($window, leapThree){
 
   var initRenderer = function(renderArea){
 
-    var width = renderArea.parent().innerWidth();
+    var width = renderArea.innerWidth();
     var height = window.innerHeight - renderArea.offset().top - 20;
 
     renderer = new THREE.WebGLRenderer();
@@ -29,8 +29,10 @@ angular.module('leapmin').directive('lpmGuide', function ($window, leapThree){
 
   return {
     restrict: 'AC',
-    scope: true,
-    template: '<div></div>',
+    scope: {
+      lpmWidth: '@',
+      lpmHeight: '@'
+    },
     link: function ($scope, $elem, $attrs){
       initRenderer($elem);
       renderer.render(scene, camera);

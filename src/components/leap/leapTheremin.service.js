@@ -6,16 +6,25 @@ angular.module('leapmin').factory('leapTheremin', function (leapManager, theremi
   var params = {};
 
   var getPitch = function (hand) {
-    var vec = hand.palmPosition;
-    var f = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
-    var d = Math.sqrt(vec[0] * vec[0] + vec[2] * vec[2]);
+    var vec = getVec(hand);
+    var d = Math.sqrt(vec[0] * vec[0] + vec[2] * vec[2]) * 0.5;
 
     params.distance = d;
+    console.log(df(d), vec[0] * 0.5, vec[2] * 0.5, d);
 
-    console.log(d);
-    f = 50000.0 / (5.0 * Math.sqrt(f) + 80.0) + 100.0;
-    f = f * (~~hand.pinchStrength + 1.0);
-    return f;
+    return df(d);
+  };
+
+  var preVec = Leap.vec3.create(), getVec = function(hand){
+    if(hand.fingers && hand.fingers[0] && hand.fingers[0].bones[3] && hand.fingers[1] && hand.fingers[1].bones[3]){
+      Leap.vec3.add(preVec, hand.fingers[0].bones[3].nextJoint, hand.fingers[1].bones[3].nextJoint);
+    }
+    return preVec;
+  };
+  
+  var df = function(d) {
+    var a = 40.0;
+    return a * 1200.0 / (a + d);
   };
 
   leapManager.on('handFound', function (hand) {
@@ -39,7 +48,6 @@ angular.module('leapmin').factory('leapTheremin', function (leapManager, theremi
       var freq;
       if(hand.id !== rightHandId) return;
       freq = getPitch(hand);
-      //console.log(freq);
       thereminNode.pitch(freq);
     });
   });

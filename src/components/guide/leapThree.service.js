@@ -18,7 +18,7 @@ angular.module('leapmin').factory('leapThree', function($window, leapManager){
         var boneMesh = new THREE.Mesh(
           new THREE.CylinderGeometry(3, 3, bone.length),
           new THREE.MeshBasicMaterial({
-            color: 0xff0000,
+            color: 0x0088ce,
             wireframe: true
           })
         );
@@ -34,11 +34,11 @@ angular.module('leapmin').factory('leapThree', function($window, leapManager){
           new THREE.SphereGeometry(7, 6, 4),
           //new THREE.MeshPhongMaterial(),
           new THREE.MeshBasicMaterial({
-            color: 0xff0000,
+            color: ((finger.type === 0 || finger.type === 1 ) && i === 4) ? 0xff0000 : 0x0088ce,
             wireframe: true
           })
         );
-        jointMesh.material.color.setHex(0x0088ce);
+        //jointMesh.material.color.setHex(0x0088ce);
         scene.add(jointMesh);
         jointMeshes.push(jointMesh);
       }

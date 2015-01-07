@@ -3,7 +3,7 @@
 angular.module('leapmin').factory('thereminNode', function (audioContext) {
   var audio = audioContext();
 
-  var buffer_size  = 16384 >> 4; //power 2
+  var buffer_size  = 16384 >> 5; //power 2
   var gain         = 0.06;
   var cutoff       = 1000; //hz
 
@@ -38,6 +38,7 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
 
     this.get = function() {
       this.ph += this.acc;
+      if(this.ph > 1.0) this.ph = this.ph - 1.0;
       var g0 = Math.sin(this.ph * p2) + 0.78 * Math.sin(this.ph * p2 * 2);
       return g0 > 0.0 ? -1 : 1;
     };
@@ -67,7 +68,6 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
   filter.type = 0;
   filter.frequency.value = cutoff;
   filter.connect(gainNode);
-  gainNode.connect(audio.destination);
   gainNode.gain.value = gain;
 
   p.val(440.0);
@@ -88,9 +88,13 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
     },
     off: function () {
       scriptproc.disconnect();
+    },
+    connect: function (node) {
+      return gainNode.connect(node);
+    },
+    disconnect: function() {
+      return gainNode.disconnect();
     }
   };
 });
-
-//webaudio.
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('leapmin').factory('leapThree', function($window, leapManager){
+angular.module('leapmin').factory('leapThree', function($window, leapManager, leapTheremin){
 
   var THREE = $window.THREE;
   var baseBoneRotation = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
@@ -34,7 +34,7 @@ angular.module('leapmin').factory('leapThree', function($window, leapManager){
           new THREE.SphereGeometry(7, 6, 4),
           //new THREE.MeshPhongMaterial(),
           new THREE.MeshBasicMaterial({
-            color: ((finger.type === 0 || finger.type === 1 ) && i === 4) ? 0xff0000 : 0x0088ce,
+            color: (finger.type === 1 && i === 4) ? 0xff0000 : 0x0088ce,
             wireframe: true
           })
         );
@@ -95,9 +95,10 @@ angular.module('leapmin').factory('leapThree', function($window, leapManager){
 
   var initScene = function(){
     scene = new THREE.Scene();
-    scene.add(new THREE.AxisHelper(400));
+    //scene.add(new THREE.AxisHelper(400));
     scene.add(new THREE.GridHelper(400, 10));
     addLeapCube(scene);
+    addPitchGuideCircle(scene);
     return scene;
   };
 
@@ -117,6 +118,30 @@ angular.module('leapmin').factory('leapThree', function($window, leapManager){
 
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
+  };
+
+  var addPitchGuideCircle = function(scene){
+    //A2 -> A4
+    [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24, 26, 27].map(function(note){
+      var fineFreq = 110.0, isKey;
+      if(note % 12 === 3){
+        isKey = true;
+      }else{
+        isKey = false;
+      }
+      return {freq: Math.pow(2, note / 12.0) * fineFreq, isKey: isKey};
+    }).forEach(function(freqInfo){
+      var geometry, material, mesh;
+      geometry = new THREE.CircleGeometry(leapTheremin.pitchFunction.inv(freqInfo.freq), 8);
+      material = new THREE.MeshBasicMaterial({
+        color: freqInfo.isKey ? 0xffff00 : 0xff0000,
+        wireframe: true
+      });
+      mesh = new THREE.Mesh(geometry, material);
+      mesh.rotation.set(Math.PI * 0.5, 0, 0);
+      mesh.position.fromArray([leapTheremin.params.antennaX, 150, leapTheremin.params.antennaZ]);
+      scene.add(mesh);
+    });
   };
 
   initScene();

@@ -3,7 +3,7 @@
 angular.module('leapmin').factory('thereminNode', function (audioContext) {
   var audio = audioContext();
 
-  var buffer_size  = 16384 >> 5; //power 2
+  var buffer_size  = 16384 >> 4; //power 2
   var gain         = 0.06;
   var cutoff       = 1000; //hz
 
@@ -80,7 +80,10 @@ angular.module('leapmin').factory('thereminNode', function (audioContext) {
       }
     },
     gain: function(gain){
-      //gainNode.gain.value = gain;
+      if(!gain){
+        return gainNode.gain.value;
+      }
+      gainNode.gain.value = gain;
     },
     start: function () {
       //scriptproc.disconnect();
